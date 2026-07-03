@@ -1,0 +1,16 @@
+PODS:
+  - AIVVideoView (1.0.0)
+
+DEPENDENCIES:
+  - AIVVideoView (from `../`)
+
+EXTERNAL SOURCES:
+  AIVVideoView:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  AIVVideoView: 280611e82b5ea5f840b0b722b064f706d8b44f2d
+
+PODFILE CHECKSUM: 00e5eb614a18148534bceb42ea68acb9ecade55e
+
+COCOAPODS: 1.16.2

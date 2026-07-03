@@ -1,0 +1,6 @@
+framework module AIVVideoView {
+  umbrella header "AIVVideoView-umbrella.h"
+
+  export *
+  module * { export * }
+}
