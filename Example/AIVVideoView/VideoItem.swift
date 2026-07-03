@@ -5,6 +5,7 @@ struct VideoItem {
     let title: String
     let category: String
     let url: URL
+    let coverURL: URL
 }
 
 // MARK: - JSON 解析
@@ -17,6 +18,7 @@ struct VideoCategory: Decodable {
 struct VideoJSON: Decodable {
     let title: String
     let url: String
+    let cover_url: String
 }
 
 extension VideoItem {
@@ -37,7 +39,7 @@ extension VideoItem {
         for cat in categories {
             for v in cat.videos {
                 let id = "\(result.count + 1)"
-                result.append(VideoItem(id: id, title: v.title, category: cat.category, url: URL(string: v.url)!))
+                result.append(VideoItem(id: id, title: v.title, category: cat.category, url: URL(string: v.url)!, coverURL: URL(string: v.cover_url)!))
             }
         }
         print("[VideoItem] ✅ loaded \(result.count) videos from \(categories.count) categories")

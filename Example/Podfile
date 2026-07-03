@@ -4,4 +4,5 @@ platform :ios, '16.0'
 
 target 'AIVVideoView_Example' do
   pod 'AIVVideoView', :path => '../'
+  pod 'SDWebImage'
 end

@@ -4,17 +4,18 @@ import AVFoundation
 @available(iOS 14.0, *)
 public struct AIVVideoPlayerSwiftUI: UIViewRepresentable {
     @ObservedObject public var player: AIVVideoPlayer
-    public let videoGravity: AVLayerVideoGravity
 
-    public init(player: AIVVideoPlayer, videoGravity: AVLayerVideoGravity = .resizeAspect) {
+    /// videoGravity 现在是 AIVVideoPlayer 自身的状态（player.videoGravity），这里只是一个可选的初始化便利参数
+    public init(player: AIVVideoPlayer, videoGravity: AVLayerVideoGravity? = nil) {
         self.player = player
-        self.videoGravity = videoGravity
+        if let videoGravity {
+            player.videoGravity = videoGravity
+        }
     }
 
     public func makeUIView(context: Context) -> AIVVideoPlayerView {
         let view = AIVVideoPlayerView()
         view.player = player
-        view.playerLayer.videoGravity = videoGravity
         return view
     }
 

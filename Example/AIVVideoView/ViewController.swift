@@ -14,8 +14,22 @@ class ViewController: UIViewController {
     }()
 
     private var videos: [VideoItem] = VideoItem.loadAll()
-    private var visiblePlayers: [IndexPath: AIVVideoPlayer] = [:]
-    private var hasInitialSetup = false
+
+    /// 只有落在这块区域内（按 minimumVisibleRatioToPlay 判定）的 cell 才会播放；nil 表示不限制，沿用 collectionView 的可见范围。
+    /// 用 view 自己的坐标系描述，不随 collectionView 滚动而变化。暂不处理屏幕旋转/尺寸变化，需要调用方在合适的时机自行更新。
+    var playableFrame: CGRect? {
+        didSet { updateVisibility() }
+    }
+
+    //    override func viewDidAppear(_ animated: Bool) {
+    //        super.viewDidAppear(animated)
+    //        playableFrame = CGRect(
+    //            x: 0,
+    //            y: view.bounds.midY - 100,
+    //            width: view.bounds.width,
+    //            height: view.safeAreaInsets.bottom
+    //        )
+    //    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,31 +44,27 @@ class ViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         collectionView.contentInset = UIEdgeInsets(top: view.safeAreaInsets.top, left: 0, bottom: view.safeAreaInsets.bottom, right: 0)
-        if !hasInitialSetup {
-            hasInitialSetup = true
-            updateVisiblePlayers()
+        // 每次布局都无条件调用，避免只跑一次时恰好赶上 visibleCells 还是空的那一帧（导致首屏永远播不起来）；
+        // 是否要真的创建播放器完全由 VideoFeedCell 自己根据可见比例决定，这里只负责算比例、报给 cell。
+        updateVisibility()
+    }
+
+    // MARK: - Visibility
+
+    /// 只负责计算每个当前可见 cell 落在"可播放区域"里的面积占比，播不播、跟谁抢播放名额完全交给 cell 自己（通过 AIVVideoPlayerCoordinator）
+    private func updateVisibility() {
+        var playableBounds = collectionView.bounds
+        if let playableFrame {
+            let convertedFrame = view.convert(playableFrame, to: collectionView)
+            playableBounds = collectionView.bounds.intersection(convertedFrame)
         }
-    }
 
-    // MARK: - Player Lifecycle
-
-    private func setupPlayer(for cell: VideoFeedCell, at indexPath: IndexPath) {
-        guard visiblePlayers[indexPath] == nil else { return }
-        let video = videos[indexPath.item]
-        let player = AIVVideoPlayer(url: video.url)
-        visiblePlayers[indexPath] = player
-        cell.attachPlayer(player)
-    }
-
-    private func releasePlayer(at indexPath: IndexPath, cell: VideoFeedCell) {
-        guard let player = visiblePlayers.removeValue(forKey: indexPath) else { return }
-        cell.detachPlayer(player)
-    }
-
-    private func updateVisiblePlayers() {
-        for indexPath in collectionView.indexPathsForVisibleItems {
-            guard let cell = collectionView.cellForItem(at: indexPath) as? VideoFeedCell else { continue }
-            setupPlayer(for: cell, at: indexPath)
+        for cell in collectionView.visibleCells {
+            guard let feedCell = cell as? VideoFeedCell else { continue }
+            let visibleArea = cell.frame.intersection(playableBounds)
+            let cellArea = cell.bounds.width * cell.bounds.height
+            let ratio = cellArea > 0 ? (visibleArea.width * visibleArea.height) / cellArea : 0
+            feedCell.updateVisibility(ratio: ratio)
         }
     }
 }
@@ -77,10 +87,9 @@ extension ViewController: UICollectionViewDataSource {
 
 extension ViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        // didEndDisplaying 触发时 cell 已从可见列表移除，collectionView.cellForItem(at:) 会返回 nil，
-        // 必须直接使用回调传入的 cell，否则 detachPlayer 永远不会执行，导致播放器/下载任务未释放
-        guard let feedCell = cell as? VideoFeedCell else { return }
-        releasePlayer(at: indexPath, cell: feedCell)
+        // didEndDisplaying 触发时 cell 已经从 visibleCells 里移除了，updateVisibility() 不会再扫到它，
+        // 必须显式通知一次，否则完全滑出屏幕的 cell 不会主动释放播放器和播放名额
+        (cell as? VideoFeedCell)?.didLeaveVisibleArea()
     }
 }
 
@@ -88,12 +97,12 @@ extension ViewController: UICollectionViewDelegate {
 
 extension ViewController: UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        updateVisiblePlayers()
+        updateVisibility()
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
-            updateVisiblePlayers()
+            updateVisibility()
         }
     }
 }
@@ -103,8 +112,8 @@ extension ViewController: UIScrollViewDelegate {
 extension ViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_: UICollectionView, layout _: UICollectionViewLayout, sizeForItemAt _: IndexPath) -> CGSize {
         let spacing: CGFloat = 4
-        let totalSpacing = spacing * 3
-        let itemWidth = (collectionView.bounds.width - totalSpacing) / 2
+        let totalSpacing = spacing * 4
+        let itemWidth = (collectionView.bounds.width - totalSpacing) / 3
         let itemHeight = itemWidth * 648.0 / 480.0
         return CGSize(width: itemWidth, height: itemHeight)
     }

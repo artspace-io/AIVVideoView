@@ -1,8 +1,16 @@
 PODS:
   - AIVVideoView (1.0.0)
+  - SDWebImage (5.21.7):
+    - SDWebImage/Core (= 5.21.7)
+  - SDWebImage/Core (5.21.7)
 
 DEPENDENCIES:
   - AIVVideoView (from `../`)
+  - SDWebImage
+
+SPEC REPOS:
+  trunk:
+    - SDWebImage
 
 EXTERNAL SOURCES:
   AIVVideoView:
@@ -10,7 +18,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AIVVideoView: 280611e82b5ea5f840b0b722b064f706d8b44f2d
+  SDWebImage: e9fc87c1aab89a8ab1bbd74eba378c6f53be8abf
 
-PODFILE CHECKSUM: 00e5eb614a18148534bceb42ea68acb9ecade55e
+PODFILE CHECKSUM: 9b643c1466f9d454d2db32522702711341989e5c
 
 COCOAPODS: 1.16.2
