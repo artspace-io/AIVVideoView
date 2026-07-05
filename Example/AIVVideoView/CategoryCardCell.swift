@@ -3,15 +3,13 @@ import SDWebImage
 import AIVVideoView
 
 /// 主题分区里的一张卡片：大圆角、静音自动播放视频 + 封面兜底 + 底部白色标题。
-/// 和 VideoFeedCell 是同一套模式：自己持有播放器，通过 AIVVideoPlayerCoordinator 竞争播放名额。
+/// 播放器生命周期委托给 AIVCellPlaybackController，这里只负责自己的展示 UI。
 final class CategoryCardCell: UICollectionViewCell {
-    private let playerView = AIVVideoPlayerView()
+    private let playback = AIVCellPlaybackController()
     private let coverImageView = UIImageView()
     private let titleLabel = UILabel()
     private let gradientLayer = CAGradientLayer()
 
-    private var readyForDisplayObservation: NSKeyValueObservation?
-    private var player: AIVVideoPlayer?
     private var video: VideoItem?
 
     /// 可见面积低于这个比例就不参与播放名额的竞争，只展示封面图
@@ -24,6 +22,7 @@ final class CategoryCardCell: UICollectionViewCell {
         contentView.layer.masksToBounds = true
         contentView.backgroundColor = .darkGray
 
+        let playerView = playback.playerView
         playerView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(playerView)
 
@@ -57,6 +56,13 @@ final class CategoryCardCell: UICollectionViewCell {
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
         ])
+
+        playback.onFirstFrameReady = { [weak self] in
+            UIView.animate(withDuration: 0.2) { self?.coverImageView.alpha = 0 }
+        }
+        playback.onDeactivated = { [weak self] in
+            self?.coverImageView.alpha = 1
+        }
     }
 
     required init?(coder: NSCoder) { nil }
@@ -68,7 +74,7 @@ final class CategoryCardCell: UICollectionViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        releasePlayerAndSlot()
+        playback.deactivate()
         coverImageView.sd_cancelCurrentImageLoad()
         coverImageView.image = nil
     }
@@ -79,58 +85,13 @@ final class CategoryCardCell: UICollectionViewCell {
         coverImageView.sd_setImage(with: video.coverURL)
     }
 
-    /// ratio 是这张卡片当前可见面积占自身总面积的比例（0...1），播不播完全由 cell 自己决定
+    /// ratio 是这张卡片当前可见面积占自身总面积的比例（0...1），播不播完全由 playback 控制器决定
     func updateVisibility(ratio: CGFloat) {
-        guard ratio >= minimumVisibleRatioToPlay else {
-            releasePlayerAndSlot()
-            return
-        }
-
-        guard player == nil else {
-            AIVVideoPlayerCoordinator.shared.updateVisibleRatio(ratio, for: self)
-            return
-        }
-
-        guard let video else { return }
-        let granted = AIVVideoPlayerCoordinator.shared.requestSlot(for: self, visibleRatio: ratio) { [weak self] in
-            self?.releasePlayerAndSlot()
-        }
-        guard granted else { return }
-
-        let newPlayer = AIVVideoPlayer(url: video.url)
-        player = newPlayer
-        attachPlayer(newPlayer)
+        playback.updateVisibility(ratio: ratio, minimumRatio: minimumVisibleRatioToPlay) { [weak self] in self?.video?.url }
     }
 
     /// 完全滑出可见范围（横向划走或纵向滚出屏幕）时调用
     func didLeaveVisibleArea() {
-        releasePlayerAndSlot()
-    }
-
-    private func attachPlayer(_ player: AIVVideoPlayer) {
-        player.playMode = .single
-        player.isMuted = true
-        playerView.player = player
-
-        readyForDisplayObservation = playerView.playerLayer.observe(\.isReadyForDisplay, options: [.new]) { [weak self] layer, _ in
-            guard layer.isReadyForDisplay else { return }
-            DispatchQueue.main.async {
-                UIView.animate(withDuration: 0.2) {
-                    self?.coverImageView.alpha = 0
-                }
-            }
-        }
-
-        player.play()
-    }
-
-    private func releasePlayerAndSlot() {
-        coverImageView.alpha = 1
-        readyForDisplayObservation = nil
-        guard let player else { return }
-        player.resignActive(stopPlayback: true)
-        playerView.player = nil
-        self.player = nil
-        AIVVideoPlayerCoordinator.shared.releaseSlot(for: self)
+        playback.deactivate()
     }
 }
