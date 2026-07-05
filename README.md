@@ -20,10 +20,6 @@ it, simply add the following line to your Podfile:
 pod 'AIVVideoView'
 ```
 
-## Author
-
-Robin, enamourchen@outlook.com
-
 ## License
 
 AIVVideoView is available under the MIT license. See the LICENSE file for more info.

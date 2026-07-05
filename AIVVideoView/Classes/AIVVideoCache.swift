@@ -70,7 +70,7 @@ final class AIVVideoCache {
         var meta = readMeta(hash: hash)
         if complete, meta.contentLength == 0 {
             let size = (try? fileManager.attributesOfItem(atPath: path(hash: hash, ext: "mp4"))[.size] as? Int64) ?? 0
-            meta.contentLength = size ?? 0
+            meta.contentLength = size
         }
         return Info(
             contentLength: meta.contentLength,
@@ -187,7 +187,7 @@ final class AIVVideoCache {
         guard let files = try? fileManager.contentsOfDirectory(atPath: cacheDir) else { return 0 }
         return files.filter { $0.hasSuffix(".mp4") }.reduce(Int64(0)) { total, name in
             let size = (try? fileManager.attributesOfItem(atPath: (cacheDir as NSString).appendingPathComponent(name))[.size] as? Int64) ?? 0
-            return total + (size ?? 0)
+            return total + size
         }
     }
 
@@ -202,8 +202,8 @@ final class AIVVideoCache {
             let filePath = (cacheDir as NSString).appendingPathComponent(name)
             let size = (try? fileManager.attributesOfItem(atPath: filePath)[.size] as? Int64) ?? 0
             let hash = (name as NSString).deletingPathExtension
-            entries.append((filePath, hash, size ?? 0, readMeta(hash: hash).lastAccessedAt))
-            total += size ?? 0
+            entries.append((filePath, hash, size, readMeta(hash: hash).lastAccessedAt))
+            total += size
         }
         guard total > maxCacheSize else { return }
 

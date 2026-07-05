@@ -54,7 +54,11 @@ public final class AIVVideoPlayer: NSObject, ObservableObject {
     public var playerLayer: AVPlayerLayer? {
         if _playerLayer == nil {
             let layer = AVPlayerLayer(player: player)
-            layer.addObserver(self, forKeyPath: #keyPath(AVPlayerLayer.readyForDisplay), options: [.new], context: &readyForDisplayContext)
+            playerLayerObservation = layer.observe(\.isReadyForDisplay, options: [.new]) { [weak self] layer, _ in
+                DispatchQueue.main.async {
+                    self?.isReadyForDisplay = layer.isReadyForDisplay
+                }
+            }
             _playerLayer = layer
         }
         return _playerLayer
@@ -81,7 +85,7 @@ public final class AIVVideoPlayer: NSObject, ObservableObject {
     private var playerObservations: [NSKeyValueObservation] = []
 
     private var _playerLayer: AVPlayerLayer?
-    private var readyForDisplayContext = "readyForDisplay"
+    private var playerLayerObservation: NSKeyValueObservation?
 
     public override init() {
         player = AVPlayer()
@@ -104,9 +108,7 @@ public final class AIVVideoPlayer: NSObject, ObservableObject {
         if let token = timeObserverToken {
             player.removeTimeObserver(token)
         }
-        if let layer = _playerLayer {
-            layer.removeObserver(self, forKeyPath: #keyPath(AVPlayerLayer.readyForDisplay), context: &readyForDisplayContext)
-        }
+        playerLayerObservation?.invalidate()
         resourceLoader?.cancel()
     }
 
@@ -321,7 +323,9 @@ public final class AIVVideoPlayer: NSObject, ObservableObject {
             forInterval: CMTimeMake(value: 1, timescale: 10),
             queue: .main
         ) { [weak self] time in
-            self?.currentTime = time
+            MainActor.assumeIsolated {
+                self?.currentTime = time
+            }
         }
     }
 
@@ -538,20 +542,5 @@ public final class AIVVideoPlayer: NSObject, ObservableObject {
     private func removePlayerItemObservers() {
         playerItemObservations.forEach { $0.invalidate() }
         playerItemObservations.removeAll()
-    }
-
-    public override func observeValue(
-        forKeyPath keyPath: String?,
-        of object: Any?,
-        change: [NSKeyValueChangeKey: Any]?,
-        context: UnsafeMutableRawPointer?
-    ) {
-        if context == &readyForDisplayContext {
-            DispatchQueue.main.async { [weak self] in
-                self?.isReadyForDisplay = self?._playerLayer?.isReadyForDisplay ?? false
-            }
-        } else {
-            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-        }
     }
 }
