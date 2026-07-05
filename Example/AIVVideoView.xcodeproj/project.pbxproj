@@ -8,12 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		00DE72DC2FF7BE0B00CCF3EF /* VideoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00DE72DB2FF7BE0B00CCF3EF /* VideoItem.swift */; };
-		00DE72DD2FF7BE0B00CCF3EF /* VideoFeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00DE72DA2FF7BE0B00CCF3EF /* VideoFeedCell.swift */; };
 		00DE72E02FF7C05A00CCF3EF /* videos.json in Resources */ = {isa = PBXBuildFile; fileRef = 00DE72DF2FF7C05A00CCF3EF /* videos.json */; };
+		00DE72E62FF9F76B00CCF3EF /* HeroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00DE72E52FF9F76B00CCF3EF /* HeroView.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
-		607FACE01AFB9204008FA782 /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		607FACE01AFB9204008FA782 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		7D063D0D7C7AF788FC4B4BE9 /* CategoryCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BEB549947D394C1E1AC653 /* CategoryCardCell.swift */; };
 		80A9D17700A4907D0897FAF2 /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 034DA6FD2ACE3E76153B9601 /* SectionHeaderView.swift */; };
 		91E3B3F0DD1E73F7E06D2E11 /* HeroCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3684D5B5DE66972A1E951948 /* HeroCell.swift */; };
@@ -22,9 +22,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		00DE72DA2FF7BE0B00CCF3EF /* VideoFeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoFeedCell.swift; sourceTree = "<group>"; };
 		00DE72DB2FF7BE0B00CCF3EF /* VideoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoItem.swift; sourceTree = "<group>"; };
 		00DE72DF2FF7C05A00CCF3EF /* videos.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = videos.json; sourceTree = "<group>"; };
+		00DE72E52FF9F76B00CCF3EF /* HeroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroView.swift; sourceTree = "<group>"; };
 		01E4443771CE939429447FE5 /* HomeViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		034DA6FD2ACE3E76153B9601 /* SectionHeaderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
 		05E8D9FA817A96D9BA85261F /* AIVVideoView.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = AIVVideoView.podspec; path = ../AIVVideoView.podspec; sourceTree = "<group>"; };
@@ -57,6 +57,51 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		00DE72E12FF9F6BB00CCF3EF /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				00DE72DB2FF7BE0B00CCF3EF /* VideoItem.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		00DE72E22FF9F6C100CCF3EF /* View */ = {
+			isa = PBXGroup;
+			children = (
+				00DE72E82FF9F7D100CCF3EF /* Category */,
+				00DE72E72FF9F7C700CCF3EF /* Hero */,
+				01E4443771CE939429447FE5 /* HomeViewController.swift */,
+				607FACD71AFB9204008FA782 /* ViewController.swift */,
+				034DA6FD2ACE3E76153B9601 /* SectionHeaderView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		00DE72E42FF9F6D300CCF3EF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				00DE72DF2FF7C05A00CCF3EF /* videos.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		00DE72E72FF9F7C700CCF3EF /* Hero */ = {
+			isa = PBXGroup;
+			children = (
+				00DE72E52FF9F76B00CCF3EF /* HeroView.swift */,
+				3684D5B5DE66972A1E951948 /* HeroCell.swift */,
+			);
+			path = Hero;
+			sourceTree = "<group>";
+		};
+		00DE72E82FF9F7D100CCF3EF /* Category */ = {
+			isa = PBXGroup;
+			children = (
+				E8BEB549947D394C1E1AC653 /* CategoryCardCell.swift */,
+			);
+			path = Category;
+			sourceTree = "<group>";
+		};
 		22FD8D1390F94BF94128967A /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -90,17 +135,12 @@
 		607FACD21AFB9204008FA782 /* Example for AIVVideoView */ = {
 			isa = PBXGroup;
 			children = (
-				00DE72DF2FF7C05A00CCF3EF /* videos.json */,
-				00DE72DA2FF7BE0B00CCF3EF /* VideoFeedCell.swift */,
-				00DE72DB2FF7BE0B00CCF3EF /* VideoItem.swift */,
+				00DE72E42FF9F6D300CCF3EF /* Resources */,
+				00DE72E22FF9F6C100CCF3EF /* View */,
+				00DE72E12FF9F6BB00CCF3EF /* Model */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
-				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
-				01E4443771CE939429447FE5 /* HomeViewController.swift */,
-				3684D5B5DE66972A1E951948 /* HeroCell.swift */,
-				E8BEB549947D394C1E1AC653 /* CategoryCardCell.swift */,
-				034DA6FD2ACE3E76153B9601 /* SectionHeaderView.swift */,
 			);
 			name = "Example for AIVVideoView";
 			path = AIVVideoView;
@@ -197,7 +237,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607FACE01AFB9204008FA782 /* BuildFile in Resources */,
+				607FACE01AFB9204008FA782 /* (null) in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 				00DE72E02FF7C05A00CCF3EF /* videos.json in Resources */,
 			);
@@ -257,8 +297,8 @@
 			files = (
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				00DE72E62FF9F76B00CCF3EF /* HeroView.swift in Sources */,
 				00DE72DC2FF7BE0B00CCF3EF /* VideoItem.swift in Sources */,
-				00DE72DD2FF7BE0B00CCF3EF /* VideoFeedCell.swift in Sources */,
 				B7CDAE1FBD173C0EF8B42ADD /* HomeViewController.swift in Sources */,
 				91E3B3F0DD1E73F7E06D2E11 /* HeroCell.swift in Sources */,
 				7D063D0D7C7AF788FC4B4BE9 /* CategoryCardCell.swift in Sources */,

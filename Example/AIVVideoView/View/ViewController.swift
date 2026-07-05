@@ -9,7 +9,7 @@ class ViewController: UIViewController {
         layout.minimumLineSpacing = 4
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.backgroundColor = .black
-        cv.register(VideoFeedCell.self, forCellWithReuseIdentifier: "cell")
+        cv.register(CategoryCardCell.self, forCellWithReuseIdentifier: "cell")
         return cv
     }()
 
@@ -55,7 +55,7 @@ class ViewController: UIViewController {
         super.viewDidLayoutSubviews()
         collectionView.contentInset = UIEdgeInsets(top: view.safeAreaInsets.top, left: 0, bottom: view.safeAreaInsets.bottom, right: 0)
         // 每次布局都无条件调用，避免只跑一次时恰好赶上 visibleCells 还是空的那一帧（导致首屏永远播不起来）；
-        // 是否要真的创建播放器完全由 VideoFeedCell 自己根据可见比例决定，这里只负责算比例、报给 cell。
+        // 是否要真的创建播放器完全由 CategoryCardCell 自己根据可见比例决定，这里只负责算比例、报给 cell。
         updateVisibility()
     }
 
@@ -70,7 +70,7 @@ class ViewController: UIViewController {
         // 被别的页面 push 盖住时，这个页面本身不会再收到滚动相关的回调，
         // 必须主动让所有可见 cell 释放播放器/播放名额，否则会一直在背后偷偷解码
         for cell in collectionView.visibleCells {
-            (cell as? VideoFeedCell)?.didLeaveVisibleArea()
+            (cell as? CategoryCardCell)?.didLeaveVisibleArea()
         }
     }
 
@@ -85,11 +85,11 @@ class ViewController: UIViewController {
         }
 
         for cell in collectionView.visibleCells {
-            guard let feedCell = cell as? VideoFeedCell else { continue }
+            guard let cardCell = cell as? CategoryCardCell else { continue }
             let visibleArea = cell.frame.intersection(playableBounds)
             let cellArea = cell.bounds.width * cell.bounds.height
             let ratio = cellArea > 0 ? (visibleArea.width * visibleArea.height) / cellArea : 0
-            feedCell.updateVisibility(ratio: ratio)
+            cardCell.updateVisibility(ratio: ratio)
         }
     }
 }
@@ -102,8 +102,8 @@ extension ViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! VideoFeedCell
-        cell.bind(videos[indexPath.item])
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CategoryCardCell
+        cell.configure(videos[indexPath.item])
         return cell
     }
 }
@@ -114,7 +114,7 @@ extension ViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         // didEndDisplaying 触发时 cell 已经从 visibleCells 里移除了，updateVisibility() 不会再扫到它，
         // 必须显式通知一次，否则完全滑出屏幕的 cell 不会主动释放播放器和播放名额
-        (cell as? VideoFeedCell)?.didLeaveVisibleArea()
+        (cell as? CategoryCardCell)?.didLeaveVisibleArea()
     }
 }
 
