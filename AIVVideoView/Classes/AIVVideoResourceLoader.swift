@@ -7,6 +7,9 @@ final class AIVVideoResourceLoader: NSObject {
     private var downloadTask: AIVVideoDownloadTask?
     private let cache = AIVVideoCache.shared
     private let lock = NSLock()
+    /// resourceLoader 回调必须避开主线程：AVFoundation 会同步在这个队列上派发代理方法，
+    /// 若指定 .main，回调里的磁盘 I/O 会直接阻塞主线程，滑动列表时表现为掉帧。
+    private let callbackQueue = DispatchQueue(label: "com.aiv.resourceloader")
 
     init(url: URL) {
         self.originalURL = url
@@ -22,7 +25,7 @@ final class AIVVideoResourceLoader: NSObject {
     func makePlayerItem() -> AVPlayerItem {
         let assetURL = Self.assetURL(for: originalURL)
         let urlAsset = AVURLAsset(url: assetURL)
-        urlAsset.resourceLoader.setDelegate(self, queue: .main)
+        urlAsset.resourceLoader.setDelegate(self, queue: callbackQueue)
         let item = AVPlayerItem(asset: urlAsset)
         item.canUseNetworkResourcesForLiveStreamingWhilePaused = true
         return item
@@ -32,23 +35,31 @@ final class AIVVideoResourceLoader: NSObject {
         lock.lock()
         let requests = loadingRequests
         loadingRequests.removeAll()
+        let task = downloadTask
+        downloadTask = nil
         lock.unlock()
         for req in requests {
             req.finishLoading(with: URLError(.cancelled) as NSError)
         }
-        downloadTask?.cancel()
-        downloadTask = nil
+        task?.cancel()
     }
 
     private func startDownloadIfNeeded() {
-        guard downloadTask == nil else { return }
-        guard !cache.isCacheComplete(for: originalURL) else {
+        lock.lock()
+        let alreadyDownloading = downloadTask != nil
+        lock.unlock()
+        guard !alreadyDownloading else { return }
+
+        let info = cache.info(for: originalURL)
+        guard !info.isComplete else {
             respondToAllLoadingRequests()
             return
         }
 
-        let task = AIVVideoDownloadTask(url: originalURL, startOffset: cache.cachedLength(for: originalURL))
+        let task = AIVVideoDownloadTask(url: originalURL, startOffset: info.cachedLength)
+        lock.lock()
         downloadTask = task
+        lock.unlock()
 
         task.onContentInfo = { [weak self] _, _ in
             self?.respondToAllLoadingRequests()
@@ -71,16 +82,16 @@ final class AIVVideoResourceLoader: NSObject {
     }
 
     private func respondToAllLoadingRequests() {
+        // 一批请求共用同一次 cache.info(for:) 结果，避免每个 request 都各自触发一次磁盘元数据读取
+        let info = cache.info(for: originalURL)
+        guard info.contentLength > 0 else { return }
         for req in safeGetRequests() {
-            _ = respond(to: req)
+            _ = respond(to: req, info: info)
         }
     }
 
-    private func respond(to loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
+    private func respond(to loadingRequest: AVAssetResourceLoadingRequest, info: AIVVideoCache.Info) -> Bool {
         if loadingRequest.isCancelled || loadingRequest.isFinished { return false }
-
-        let info = cache.info(for: originalURL)
-        guard info.contentLength > 0 else { return false }
 
         if let infoRequest = loadingRequest.contentInformationRequest {
             infoRequest.contentType = info.mimeType.isEmpty ? "video/mp4" : info.mimeType
@@ -143,15 +154,21 @@ extension AIVVideoResourceLoader: AVAssetResourceLoaderDelegate {
     func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
         addRequest(loadingRequest)
         startDownloadIfNeeded()
-        _ = respond(to: loadingRequest)
+        let info = cache.info(for: originalURL)
+        if info.contentLength > 0 {
+            _ = respond(to: loadingRequest, info: info)
+        }
         return true
     }
 
     func resourceLoader(_ resourceLoader: AVAssetResourceLoader, didCancel loadingRequest: AVAssetResourceLoadingRequest) {
         removeRequest(loadingRequest)
         if safeGetRequests().isEmpty {
-            downloadTask?.cancel()
+            lock.lock()
+            let task = downloadTask
             downloadTask = nil
+            lock.unlock()
+            task?.cancel()
         }
     }
 }

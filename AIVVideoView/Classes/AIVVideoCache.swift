@@ -24,6 +24,9 @@ final class AIVVideoCache {
 
     private let fileManager = FileManager.default
     private let ioQueue = DispatchQueue(label: "com.aivvideocache.io")
+    /// 记录每个视频最近一次把 lastAccessedAt 落盘的时间，避免 read() 高频调用时逐次触发 meta 文件读写
+    private var lastPersistedAccessTime: [String: TimeInterval] = [:]
+    private let accessPersistInterval: TimeInterval = 5
 
     private var cacheDir: String {
         let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)
@@ -141,9 +144,13 @@ final class AIVVideoCache {
             do {
                 try handle.seek(toOffset: UInt64(offset))
                 let data = try handle.read(upToCount: length)
-                var meta = readMeta(hash: hash)
-                meta.lastAccessedAt = Date().timeIntervalSince1970
-                writeMeta(meta, hash: hash)
+                let now = Date().timeIntervalSince1970
+                if now - (lastPersistedAccessTime[hash] ?? 0) > accessPersistInterval {
+                    var meta = readMeta(hash: hash)
+                    meta.lastAccessedAt = now
+                    writeMeta(meta, hash: hash)
+                    lastPersistedAccessTime[hash] = now
+                }
                 return data
             } catch {
                 return nil
