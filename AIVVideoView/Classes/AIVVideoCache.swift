@@ -2,18 +2,18 @@ import Foundation
 import CryptoKit
 
 /// 基于磁盘的视频缓存管理器：按偏移量增量写入，支持边下边播、断点续存与 LRU 清理。
-final class AIVVideoCache {
-    static let shared = AIVVideoCache()
+public final class AIVVideoCache {
+    public static let shared = AIVVideoCache()
 
-    struct Info {
-        var contentLength: Int64 = 0
-        var cachedLength: Int64 = 0
-        var mimeType: String = ""
-        var isComplete: Bool = false
+    public struct Info {
+        public var contentLength: Int64 = 0
+        public var cachedLength: Int64 = 0
+        public var mimeType: String = ""
+        public var isComplete: Bool = false
     }
 
     /// 磁盘缓存总大小上限，超出后按最近访问时间淘汰已完整下载的视频
-    var maxCacheSize: Int64 = 500 * 1024 * 1024
+    public var maxCacheSize: Int64 = 500 * 1024 * 1024
 
     private struct Meta: Codable {
         var contentLength: Int64 = 0
@@ -48,7 +48,7 @@ final class AIVVideoCache {
         (cacheDir as NSString).appendingPathComponent(hash + "." + ext)
     }
 
-    func filePath(for url: URL) -> String { path(hash: hash(for: url), ext: "mp4") }
+    public func filePath(for url: URL) -> String { path(hash: hash(for: url), ext: "mp4") }
     private func tmpPath(for url: URL) -> String { path(hash: hash(for: url), ext: "tmp") }
     private func metaPath(hash: String) -> String { path(hash: hash, ext: "meta") }
     private func metaPath(for url: URL) -> String { metaPath(hash: hash(for: url)) }
@@ -83,11 +83,11 @@ final class AIVVideoCache {
         )
     }
 
-    func info(for url: URL) -> Info {
+    public func info(for url: URL) -> Info {
         ioQueue.sync { infoLocked(for: url) }
     }
 
-    func isCacheComplete(for url: URL) -> Bool { info(for: url).isComplete }
+    public func isCacheComplete(for url: URL) -> Bool { info(for: url).isComplete }
     func cachedLength(for url: URL) -> Int64 { info(for: url).cachedLength }
     func contentLength(for url: URL) -> Int64 { info(for: url).contentLength }
 
@@ -170,7 +170,7 @@ final class AIVVideoCache {
 
     // MARK: - Cleanup
 
-    func clear(for url: URL) {
+    public func clear(for url: URL) {
         ioQueue.sync {
             let hash = hash(for: url)
             try? fileManager.removeItem(atPath: path(hash: hash, ext: "mp4"))
@@ -179,14 +179,14 @@ final class AIVVideoCache {
         }
     }
 
-    func clearAll() {
+    public func clearAll() {
         ioQueue.sync {
             try? fileManager.removeItem(atPath: cacheDir)
             try? fileManager.createDirectory(atPath: cacheDir, withIntermediateDirectories: true)
         }
     }
 
-    func totalCacheSize() -> Int64 {
+    public func totalCacheSize() -> Int64 {
         ioQueue.sync { totalCacheSizeLocked() }
     }
 
