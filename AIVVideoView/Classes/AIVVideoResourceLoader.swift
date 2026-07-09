@@ -11,6 +11,10 @@ final class AIVVideoResourceLoader: NSObject {
     /// 若指定 .main，回调里的磁盘 I/O 会直接阻塞主线程，滑动列表时表现为掉帧。
     private let callbackQueue = DispatchQueue(label: "com.aiv.resourceloader")
 
+    /// 测试用的注入点：每次 resourceLoader 代理回调触发时上报调用线程是否是主线程，
+    /// 用来在单测里给“回调不能卡主线程”这个之前修过的 bug 做回归验证。生产环境不设置，零开销。
+    var onDelegateCallback: ((Bool) -> Void)?
+
     init(url: URL) {
         self.originalURL = url
         super.init()
@@ -152,6 +156,7 @@ final class AIVVideoResourceLoader: NSObject {
 
 extension AIVVideoResourceLoader: AVAssetResourceLoaderDelegate {
     func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
+        onDelegateCallback?(Thread.isMainThread)
         addRequest(loadingRequest)
         startDownloadIfNeeded()
         let info = cache.info(for: originalURL)

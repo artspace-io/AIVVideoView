@@ -10,18 +10,41 @@
 		00DE72DC2FF7BE0B00CCF3EF /* VideoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00DE72DB2FF7BE0B00CCF3EF /* VideoItem.swift */; };
 		00DE72E02FF7C05A00CCF3EF /* videos.json in Resources */ = {isa = PBXBuildFile; fileRef = 00DE72DF2FF7C05A00CCF3EF /* videos.json */; };
 		00DE72E62FF9F76B00CCF3EF /* HeroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00DE72E52FF9F76B00CCF3EF /* HeroView.swift */; };
+		091ED54545066771B0EC6F82 /* Pods_AIVVideoView_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57B32C619CC8C615FCCCB6EC /* Pods_AIVVideoView_Tests.framework */; };
+		1957F5178B68F0327BD24B31 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0D6ADC428A066DA20502075 /* Foundation.framework */; };
+		209C90FCB60B7790919144E8 /* AIVCellPlaybackControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0069EB363682A9531E17DFDC /* AIVCellPlaybackControllerTests.swift */; };
+		2FE9F07A690BECBA9AFBC357 /* AIVVideoPlayerPlaylistOrderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB7A1687CEB737DAAA3CB0 /* AIVVideoPlayerPlaylistOrderTests.swift */; };
+		41CD8544271B148D2C28CFE4 /* AIVVideoCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FBB6255327A8628ABB978E /* AIVVideoCacheTests.swift */; };
+		560FFD2D28DBF24E0ADAB4BF /* AIVVideoDownloadTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2A213C39B246091233D010 /* AIVVideoDownloadTaskTests.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
-		607FACE01AFB9204008FA782 /* (null) in Resources */ = {isa = PBXBuildFile; };
+		607FACE01AFB9204008FA782 /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		6638110B96CD4023261D2BB8 /* AIVVideoResourceLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0047EBC10AC0BFAB738C43F6 /* AIVVideoResourceLoaderTests.swift */; };
+		70D11657536122438D459560 /* StubURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FF1A2EA92084130EBE423A /* StubURLProtocol.swift */; };
+		781AFEF02373BE9DC838A976 /* AIVVideoPlayerCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C7EA5C34B2ED1F5AE336EE /* AIVVideoPlayerCoordinatorTests.swift */; };
 		7D063D0D7C7AF788FC4B4BE9 /* CategoryCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BEB549947D394C1E1AC653 /* CategoryCardCell.swift */; };
 		80A9D17700A4907D0897FAF2 /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 034DA6FD2ACE3E76153B9601 /* SectionHeaderView.swift */; };
+		894862C1EDF90A37E0D1CF91 /* AIVVideoPlayerViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B4CCA84186C9F89A9F72BD /* AIVVideoPlayerViewTests.swift */; };
 		91E3B3F0DD1E73F7E06D2E11 /* HeroCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3684D5B5DE66972A1E951948 /* HeroCell.swift */; };
 		B7CDAE1FBD173C0EF8B42ADD /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01E4443771CE939429447FE5 /* HomeViewController.swift */; };
+		D4714775805810EE9DF8B36E /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46C666216EB016876C5422C1 /* XCTest.framework */; };
 		E6559EFD6F5A697AE749B918 /* Pods_AIVVideoView_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71E1705383B44BCDE54A6F1B /* Pods_AIVVideoView_Example.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		E605B07C456078D4010CB5CF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 607FACC81AFB9204008FA782 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 607FACCF1AFB9204008FA782;
+			remoteInfo = AIVVideoView_Example;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		0047EBC10AC0BFAB738C43F6 /* AIVVideoResourceLoaderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AIVVideoResourceLoaderTests.swift; sourceTree = "<group>"; };
+		0069EB363682A9531E17DFDC /* AIVCellPlaybackControllerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AIVCellPlaybackControllerTests.swift; sourceTree = "<group>"; };
 		00DE72DB2FF7BE0B00CCF3EF /* VideoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoItem.swift; sourceTree = "<group>"; };
 		00DE72DF2FF7C05A00CCF3EF /* videos.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = videos.json; sourceTree = "<group>"; };
 		00DE72E52FF9F76B00CCF3EF /* HeroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroView.swift; sourceTree = "<group>"; };
@@ -29,20 +52,29 @@
 		034DA6FD2ACE3E76153B9601 /* SectionHeaderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
 		05E8D9FA817A96D9BA85261F /* AIVVideoView.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = AIVVideoView.podspec; path = ../AIVVideoView.podspec; sourceTree = "<group>"; };
 		3684D5B5DE66972A1E951948 /* HeroCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HeroCell.swift; sourceTree = "<group>"; };
+		45C7EA5C34B2ED1F5AE336EE /* AIVVideoPlayerCoordinatorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AIVVideoPlayerCoordinatorTests.swift; sourceTree = "<group>"; };
+		46C666216EB016876C5422C1 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		56FF1A2EA92084130EBE423A /* StubURLProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StubURLProtocol.swift; sourceTree = "<group>"; };
 		57B32C619CC8C615FCCCB6EC /* Pods_AIVVideoView_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AIVVideoView_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD01AFB9204008FA782 /* AIVVideoView_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AIVVideoView_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		607FACD71AFB9204008FA782 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		607FACDC1AFB9204008FA782 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		6C0D367478C30C505E925ECB /* AIVVideoView_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AIVVideoView_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E8D0BF77C9CB8BC2D2BF504 /* Pods-AIVVideoView_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AIVVideoView_Tests.release.xcconfig"; path = "Target Support Files/Pods-AIVVideoView_Tests/Pods-AIVVideoView_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		71E1705383B44BCDE54A6F1B /* Pods_AIVVideoView_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AIVVideoView_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		95B4CCA84186C9F89A9F72BD /* AIVVideoPlayerViewTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AIVVideoPlayerViewTests.swift; sourceTree = "<group>"; };
 		BAB50D12390C6EFC93CD6CFB /* Pods-AIVVideoView_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AIVVideoView_Tests.debug.xcconfig"; path = "Target Support Files/Pods-AIVVideoView_Tests/Pods-AIVVideoView_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		BD3B8E9AF2AC803C6921333C /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		C53AF9A568EEE229A98D6A56 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		CB12CB46D9A226B58B4F4460 /* Pods-AIVVideoView_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AIVVideoView_Example.release.xcconfig"; path = "Target Support Files/Pods-AIVVideoView_Example/Pods-AIVVideoView_Example.release.xcconfig"; sourceTree = "<group>"; };
+		CEAB7A1687CEB737DAAA3CB0 /* AIVVideoPlayerPlaylistOrderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AIVVideoPlayerPlaylistOrderTests.swift; sourceTree = "<group>"; };
+		E3FBB6255327A8628ABB978E /* AIVVideoCacheTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AIVVideoCacheTests.swift; sourceTree = "<group>"; };
 		E8BEB549947D394C1E1AC653 /* CategoryCardCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CategoryCardCell.swift; sourceTree = "<group>"; };
 		EBB155F1B2FA359B5D58C216 /* Pods-AIVVideoView_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AIVVideoView_Example.debug.xcconfig"; path = "Target Support Files/Pods-AIVVideoView_Example/Pods-AIVVideoView_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		EF2A213C39B246091233D010 /* AIVVideoDownloadTaskTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AIVVideoDownloadTaskTests.swift; sourceTree = "<group>"; };
+		F0D6ADC428A066DA20502075 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +83,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				E6559EFD6F5A697AE749B918 /* Pods_AIVVideoView_Example.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C2E428F9E26FF7DF18E244C5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1957F5178B68F0327BD24B31 /* Foundation.framework in Frameworks */,
+				D4714775805810EE9DF8B36E /* XCTest.framework in Frameworks */,
+				091ED54545066771B0EC6F82 /* Pods_AIVVideoView_Tests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,6 +155,31 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		2721DEC5DBBB55CCF2E0C39F /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				45C7EA5C34B2ED1F5AE336EE /* AIVVideoPlayerCoordinatorTests.swift */,
+				CEAB7A1687CEB737DAAA3CB0 /* AIVVideoPlayerPlaylistOrderTests.swift */,
+				E3FBB6255327A8628ABB978E /* AIVVideoCacheTests.swift */,
+				EF2A213C39B246091233D010 /* AIVVideoDownloadTaskTests.swift */,
+				56FF1A2EA92084130EBE423A /* StubURLProtocol.swift */,
+				0047EBC10AC0BFAB738C43F6 /* AIVVideoResourceLoaderTests.swift */,
+				0069EB363682A9531E17DFDC /* AIVCellPlaybackControllerTests.swift */,
+				95B4CCA84186C9F89A9F72BD /* AIVVideoPlayerViewTests.swift */,
+			);
+			name = Tests;
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		38F99FBDFF0C0A89D78A4802 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				F0D6ADC428A066DA20502075 /* Foundation.framework */,
+				46C666216EB016876C5422C1 /* XCTest.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
@@ -121,6 +188,7 @@
 				607FACD11AFB9204008FA782 /* Products */,
 				22FD8D1390F94BF94128967A /* Pods */,
 				C70DC28BCB8D323F9B25D3D6 /* Frameworks */,
+				2721DEC5DBBB55CCF2E0C39F /* Tests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -128,6 +196,7 @@
 			isa = PBXGroup;
 			children = (
 				607FACD01AFB9204008FA782 /* AIVVideoView_Example.app */,
+				6C0D367478C30C505E925ECB /* AIVVideoView_Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -169,6 +238,7 @@
 			children = (
 				71E1705383B44BCDE54A6F1B /* Pods_AIVVideoView_Example.framework */,
 				57B32C619CC8C615FCCCB6EC /* Pods_AIVVideoView_Tests.framework */,
+				38F99FBDFF0C0A89D78A4802 /* iOS */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -194,6 +264,25 @@
 			productName = AIVVideoView;
 			productReference = 607FACD01AFB9204008FA782 /* AIVVideoView_Example.app */;
 			productType = "com.apple.product-type.application";
+		};
+		82A994C4D3FC9533E7387F80 /* AIVVideoView_Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 18448E19E1754611A2E784AE /* Build configuration list for PBXNativeTarget "AIVVideoView_Tests" */;
+			buildPhases = (
+				893EC07E6C7664B13052A9C3 /* [CP] Check Pods Manifest.lock */,
+				9B990B0205D3EB980973FBC0 /* Sources */,
+				C2E428F9E26FF7DF18E244C5 /* Frameworks */,
+				A3793D03E13F834D0FB449DE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				53E710532693B18C6921B08F /* PBXTargetDependency */,
+			);
+			name = AIVVideoView_Tests;
+			productName = AIVVideoView_Tests;
+			productReference = 6C0D367478C30C505E925ECB /* AIVVideoView_Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -228,6 +317,7 @@
 			projectRoot = "";
 			targets = (
 				607FACCF1AFB9204008FA782 /* AIVVideoView_Example */,
+				82A994C4D3FC9533E7387F80 /* AIVVideoView_Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -237,9 +327,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607FACE01AFB9204008FA782 /* (null) in Resources */,
+				607FACE01AFB9204008FA782 /* BuildFile in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 				00DE72E02FF7C05A00CCF3EF /* videos.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A3793D03E13F834D0FB449DE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,6 +385,28 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AIVVideoView_Example/Pods-AIVVideoView_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		893EC07E6C7664B13052A9C3 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AIVVideoView_Tests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -306,9 +425,70 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9B990B0205D3EB980973FBC0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				781AFEF02373BE9DC838A976 /* AIVVideoPlayerCoordinatorTests.swift in Sources */,
+				2FE9F07A690BECBA9AFBC357 /* AIVVideoPlayerPlaylistOrderTests.swift in Sources */,
+				41CD8544271B148D2C28CFE4 /* AIVVideoCacheTests.swift in Sources */,
+				560FFD2D28DBF24E0ADAB4BF /* AIVVideoDownloadTaskTests.swift in Sources */,
+				70D11657536122438D459560 /* StubURLProtocol.swift in Sources */,
+				6638110B96CD4023261D2BB8 /* AIVVideoResourceLoaderTests.swift in Sources */,
+				209C90FCB60B7790919144E8 /* AIVCellPlaybackControllerTests.swift in Sources */,
+				894862C1EDF90A37E0D1CF91 /* AIVVideoPlayerViewTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		53E710532693B18C6921B08F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIVVideoView_Example;
+			target = 607FACCF1AFB9204008FA782 /* AIVVideoView_Example */;
+			targetProxy = E605B07C456078D4010CB5CF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		2E1A433333B46F5A83D58C0F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6E8D0BF77C9CB8BC2D2BF504 /* Pods-AIVVideoView_Tests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.AIVVideoView-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.7;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AIVVideoView_Example.app/AIVVideoView_Example";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		52CB95A9087663A5441DAC04 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BAB50D12390C6EFC93CD6CFB /* Pods-AIVVideoView_Tests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.AIVVideoView-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.7;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AIVVideoView_Example.app/AIVVideoView_Example";
+			};
+			name = Debug;
+		};
 		607FACED1AFB9204008FA782 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -453,6 +633,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		18448E19E1754611A2E784AE /* Build configuration list for PBXNativeTarget "AIVVideoView_Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E1A433333B46F5A83D58C0F /* Release */,
+				52CB95A9087663A5441DAC04 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		607FACCB1AFB9204008FA782 /* Build configuration list for PBXProject "AIVVideoView" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

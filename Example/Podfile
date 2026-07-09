@@ -5,4 +5,8 @@ platform :ios, '16.0'
 target 'AIVVideoView_Example' do
   pod 'AIVVideoView', :path => '../'
   pod 'SDWebImage'
+
+  target 'AIVVideoView_Tests' do
+    inherit! :search_paths
+  end
 end

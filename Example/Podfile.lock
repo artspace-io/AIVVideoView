@@ -1,5 +1,5 @@
 PODS:
-  - AIVVideoView (1.0.0)
+  - AIVVideoView (1.0.1)
   - SDWebImage (5.21.7):
     - SDWebImage/Core (= 5.21.7)
   - SDWebImage/Core (5.21.7)
@@ -17,9 +17,9 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  AIVVideoView: 280611e82b5ea5f840b0b722b064f706d8b44f2d
+  AIVVideoView: 581f5b390c7b79113fe54686f5e73c6c5f3c7b5e
   SDWebImage: e9fc87c1aab89a8ab1bbd74eba378c6f53be8abf
 
-PODFILE CHECKSUM: 9b643c1466f9d454d2db32522702711341989e5c
+PODFILE CHECKSUM: 5d0a8987fd1c023f2b98b19831c4b5a7778fff47
 
 COCOAPODS: 1.16.2

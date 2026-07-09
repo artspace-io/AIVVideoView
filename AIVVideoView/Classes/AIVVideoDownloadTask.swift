@@ -16,13 +16,22 @@ final class AIVVideoDownloadTask: NSObject {
     var onComplete: ((AIVVideoDownloadTask, Error?) -> Void)?
     var onContentInfo: ((Int64, String) -> Void)?
 
+    /// 测试用的注入点：默认返回和线上完全一致的 .default 配置。
+    /// URLProtocol.registerClass 全局注册在 .default 配置下并不总是能可靠拦截请求
+    /// （系统可能会走出进程的网络守护进程），单测需要换成 .ephemeral + 显式 protocolClasses
+    /// 才能稳定拦截，所以留了这个内部可替换的口子，不影响线上行为。
+    static var sessionConfigurationProvider: () -> URLSessionConfiguration = {
+        let config = URLSessionConfiguration.default
+        config.requestCachePolicy = .reloadIgnoringLocalCacheData
+        return config
+    }
+
     init(url: URL, startOffset: Int64 = 0) {
         self.url = url
         self.startOffset = startOffset
         self.downloadedLength = startOffset
         super.init()
-        let config = URLSessionConfiguration.default
-        config.requestCachePolicy = .reloadIgnoringLocalCacheData
+        let config = Self.sessionConfigurationProvider()
         session = URLSession(configuration: config, delegate: self, delegateQueue: nil)
         var request = URLRequest(url: url)
         if startOffset > 0 {
