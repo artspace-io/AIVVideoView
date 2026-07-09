@@ -1,7 +1,7 @@
 import Foundation
 import AVFoundation
 
-final class AIVVideoResourceLoader: NSObject {
+public final class AIVVideoResourceLoader: NSObject {
     let originalURL: URL
     private var loadingRequests: [AVAssetResourceLoadingRequest] = []
     private var downloadTask: AIVVideoDownloadTask?
@@ -15,7 +15,7 @@ final class AIVVideoResourceLoader: NSObject {
     /// 用来在单测里给“回调不能卡主线程”这个之前修过的 bug 做回归验证。生产环境不设置，零开销。
     var onDelegateCallback: ((Bool) -> Void)?
 
-    init(url: URL) {
+    public init(url: URL) {
         self.originalURL = url
         super.init()
     }
@@ -26,7 +26,7 @@ final class AIVVideoResourceLoader: NSObject {
         return components.url!
     }
 
-    func makePlayerItem() -> AVPlayerItem {
+    public func makePlayerItem() -> AVPlayerItem {
         // 本地文件已经完整可用，不需要下载也不需要缓存；AIVVideoDownloadTask 是按 HTTP 语义写的
         // （只认 HTTPURLResponse），对 file:// URL 发起请求时系统返回的是普通 URLResponse，
         // 会在 didReceive response 里直接被当成非法响应 cancel 掉，导致 contentLength 永远是 0、
@@ -44,7 +44,7 @@ final class AIVVideoResourceLoader: NSObject {
         return item
     }
 
-    func cancel() {
+    public func cancel() {
         lock.lock()
         let requests = loadingRequests
         loadingRequests.removeAll()
@@ -55,6 +55,23 @@ final class AIVVideoResourceLoader: NSObject {
             req.finishLoading(with: URLError(.cancelled) as NSError)
         }
         task?.cancel()
+    }
+
+    public var isCacheCompleted: Bool {
+        cache.isCacheComplete(for: originalURL)
+    }
+
+    public var cacheProgressValue: Double {
+        let info = cache.info(for: originalURL)
+        return Double(info.cachedLength) / Double(max(info.contentLength, 1))
+    }
+
+    public func cleanCache() {
+        cache.clear(for: originalURL)
+    }
+
+    public static func cleanAllCache() {
+        AIVVideoCache.shared.clearAll()
     }
 
     private func startDownloadIfNeeded() {
@@ -164,7 +181,7 @@ final class AIVVideoResourceLoader: NSObject {
 // MARK: - AVAssetResourceLoaderDelegate
 
 extension AIVVideoResourceLoader: AVAssetResourceLoaderDelegate {
-    func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
+    public func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
         onDelegateCallback?(Thread.isMainThread)
         addRequest(loadingRequest)
         startDownloadIfNeeded()
@@ -175,7 +192,7 @@ extension AIVVideoResourceLoader: AVAssetResourceLoaderDelegate {
         return true
     }
 
-    func resourceLoader(_ resourceLoader: AVAssetResourceLoader, didCancel loadingRequest: AVAssetResourceLoadingRequest) {
+    public func resourceLoader(_ resourceLoader: AVAssetResourceLoader, didCancel loadingRequest: AVAssetResourceLoadingRequest) {
         removeRequest(loadingRequest)
         if safeGetRequests().isEmpty {
             lock.lock()
