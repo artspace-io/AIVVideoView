@@ -27,6 +27,15 @@ final class AIVVideoResourceLoader: NSObject {
     }
 
     func makePlayerItem() -> AVPlayerItem {
+        // 本地文件已经完整可用，不需要下载也不需要缓存；AIVVideoDownloadTask 是按 HTTP 语义写的
+        // （只认 HTTPURLResponse），对 file:// URL 发起请求时系统返回的是普通 URLResponse，
+        // 会在 didReceive response 里直接被当成非法响应 cancel 掉，导致 contentLength 永远是 0、
+        // 所有 loadingRequest 永远等不到数据——播放器卡在 preparing，永远不会 readyToPlay。
+        // 所以本地文件直接绕开整套 resourceLoader/下载/缓存机制，走原生的 file:// 播放。
+        guard !originalURL.isFileURL else {
+            return AVPlayerItem(url: originalURL)
+        }
+
         let assetURL = Self.assetURL(for: originalURL)
         let urlAsset = AVURLAsset(url: assetURL)
         urlAsset.resourceLoader.setDelegate(self, queue: callbackQueue)
