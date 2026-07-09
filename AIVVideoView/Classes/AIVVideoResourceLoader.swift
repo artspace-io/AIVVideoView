@@ -178,6 +178,31 @@ public final class AIVVideoResourceLoader: NSObject {
     }
 }
 
+// MARK: - Preload
+
+public extension AIVVideoResourceLoader {
+    static func preload(url: URL) async throws -> URL {
+        if url.isFileURL { return url }
+
+        let cache = AIVVideoCache.shared
+        if cache.isCacheComplete(for: url) {
+            return URL(fileURLWithPath: cache.filePath(for: url))
+        }
+
+        return try await withCheckedThrowingContinuation { continuation in
+            let task = AIVVideoDownloadTask(url: url)
+            task.onComplete = { _, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume(returning: URL(fileURLWithPath: cache.filePath(for: url)))
+                }
+            }
+            task.start()
+        }
+    }
+}
+
 // MARK: - AVAssetResourceLoaderDelegate
 
 extension AIVVideoResourceLoader: AVAssetResourceLoaderDelegate {
