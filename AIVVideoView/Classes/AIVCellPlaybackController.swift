@@ -21,6 +21,10 @@ public final class AIVCellPlaybackController {
     /// isCachingSuspended 后走 becomeActive），可以通过这个闭包接管
     public var startPlayback: ((AIVVideoPlayer) -> Void)?
 
+    /// 申请到名额、创建播放器时使用的播放模式，宿主可以在 updateVisibility/setActive 之前设置。
+    /// 默认 .single（循环播放当前这一个视频），适合列表 feed 场景
+    public var playMode: AIVVideoPlayMode = .single
+
     private var player: AIVVideoPlayer?
     private var readyForDisplayObservation: NSKeyValueObservation?
 
@@ -71,7 +75,7 @@ public final class AIVCellPlaybackController {
         guard granted else { return }
 
         let newPlayer = AIVVideoPlayer(url: url)
-        newPlayer.playMode = .single
+        newPlayer.playMode = playMode
         newPlayer.isMuted = true
         player = newPlayer
         playerView.player = newPlayer
