@@ -26,6 +26,8 @@ public final class AIVCellPlaybackController {
     public var playMode: AIVVideoPlayMode = .single
 
     private var player: AIVVideoPlayer?
+    /// 当前播放器实际加载的地址，用来识别"view 被复用了，但还挂着别的内容的播放器"这种情况
+    private var currentURL: URL?
     private var readyForDisplayObservation: NSKeyValueObservation?
 
     public init() {}
@@ -38,12 +40,19 @@ public final class AIVCellPlaybackController {
             return
         }
 
-        guard player == nil else {
-            AIVVideoPlayerCoordinator.shared.updateVisibleRatio(ratio, for: self)
-            return
+        let requestedURL = urlProvider()
+        if player != nil {
+            guard requestedURL != currentURL else {
+                AIVVideoPlayerCoordinator.shared.updateVisibleRatio(ratio, for: self)
+                return
+            }
+            // 走到这说明宿主 view 被复用来展示别的内容了（比如 iCarousel 这类不会调用
+            // prepareForReuse 的场景），但手上的播放器还是旧内容的，URL 对不上，必须先释放
+            // 名额再重新申请，否则新内容永远没机会真正播放。
+            deactivate()
         }
 
-        guard let url = urlProvider() else { return }
+        guard let url = requestedURL else { return }
         requestSlotAndPlay(url: url, ratio: ratio)
     }
 
@@ -53,7 +62,14 @@ public final class AIVCellPlaybackController {
             deactivate()
             return
         }
-        guard player == nil, let url = urlProvider() else { return }
+
+        let requestedURL = urlProvider()
+        if player != nil {
+            guard requestedURL != currentURL else { return }
+            deactivate()
+        }
+
+        guard let url = requestedURL else { return }
         requestSlotAndPlay(url: url, ratio: 1)
     }
 
@@ -61,6 +77,7 @@ public final class AIVCellPlaybackController {
     public func deactivate() {
         onDeactivated?()
         readyForDisplayObservation = nil
+        currentURL = nil
         guard let player else { return }
         player.resignActive(stopPlayback: true)
         playerView.player = nil
@@ -78,6 +95,7 @@ public final class AIVCellPlaybackController {
         newPlayer.playMode = playMode
         newPlayer.isMuted = true
         player = newPlayer
+        currentURL = url
         playerView.player = newPlayer
 
         readyForDisplayObservation = playerView.playerLayer.observe(\.isReadyForDisplay, options: [.new]) { [weak self] layer, _ in
