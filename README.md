@@ -20,6 +20,19 @@ it, simply add the following line to your Podfile:
 pod 'AIVVideoView'
 ```
 
+AIVVideoView also supports the [Swift Package Manager](https://swift.org/package-manager). In Xcode, go to
+File > Add Package Dependencies... and enter:
+
+```
+https://github.com/artspace-io/AIVVideoView.git
+```
+
+or add it to your `Package.swift`:
+
+```swift
+.package(url: "https://github.com/artspace-io/AIVVideoView.git", from: "1.0.1")
+```
+
 ## License
 
 AIVVideoView is available under the MIT license. See the LICENSE file for more info.
