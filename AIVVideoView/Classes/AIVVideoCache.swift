@@ -28,7 +28,7 @@ public final class AIVVideoCache {
     private var lastPersistedAccessTime: [String: TimeInterval] = [:]
     private let accessPersistInterval: TimeInterval = 5
 
-    private var cacheDir: String {
+    private lazy var cacheDir: String {
         let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)
         return (paths.first! as NSString).appendingPathComponent("videos")
     }
