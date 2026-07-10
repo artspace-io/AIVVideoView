@@ -142,6 +142,30 @@ final class AIVVideoCacheTests: XCTestCase {
         XCTAssertEqual(cache.read(offset: 0, length: full.count, for: url), full, "所有分片并发写完后，最终内容应该和预期完全一致，不能因为竞争而丢块/错位")
     }
 
+    /// 确定性地复现"乱序写入导致提前 finalize"这个 bug：如果 cachedLength 只用
+    /// max(现有值, offset+length) 计算（等于"目前为止见过的最远 offset"），那么最后一个
+    /// 分片一旦先落盘，会让 cachedLength 直接跳到 contentLength，被误判成"已经写满"提前
+    /// finalize、rename 成最终文件；随后 0 号到倒数第二个分片写入时，会被 write() 顶部
+    /// "文件已经是完整态，直接 no-op"的短路悄悄丢弃——最终文件长度是对的，中间除了最后一个
+    /// 分片之外全是 sparse file 补的 0。这里不依赖并发调度的运气，直接按倒序同步写入。
+    func testReverseOrderWritesDoNotPrematurelyFinalizeAndDropEarlierChunks() {
+        let url = makeURL()
+        let chunkSize = 16
+        let chunkCount = 5
+        let full = (0..<chunkCount).reduce(into: Data()) { data, i in
+            data.append(Data(repeating: UInt8(i + 1), count: chunkSize))
+        }
+        cache.updateContentInfo(contentLength: Int64(full.count), mimeType: "video/mp4", for: url)
+
+        for i in stride(from: chunkCount - 1, through: 0, by: -1) {
+            let chunk = full.subdata(in: (i * chunkSize)..<((i + 1) * chunkSize))
+            XCTAssertTrue(cache.write(chunk, at: Int64(i * chunkSize), for: url))
+        }
+
+        XCTAssertTrue(cache.isCacheComplete(for: url))
+        XCTAssertEqual(cache.read(offset: 0, length: full.count, for: url), full, "倒序写入不应该丢失任何分片，也不应该提前把还没写全的文件当成已完成")
+    }
+
     func testTrimEvictsLeastRecentlyAccessedCompleteEntryWhenOverBudget() {
         cache.clearAll()
 
