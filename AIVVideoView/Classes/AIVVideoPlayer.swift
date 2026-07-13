@@ -230,6 +230,15 @@ public final class AIVVideoPlayer: NSObject, ObservableObject {
         prepare(url: url)
     }
 
+    /// stopPlayback = true 时会把 AVPlayerItem 从 AVPlayer 上彻底摘掉（replaceCurrentItem(with: nil)），
+    /// 不只是 pause()。只 pause 而不摘 item 时，AVPlayerItem 处于暂停态仍然会继续向前预缓冲，
+    /// 而它预缓冲走的还是同一个已经被 resourceLoader.cancel() 取消过一次、但没有被摘掉委托关系的
+    /// resourceLoader——于是会不断重新发起新的 loadingRequest，每次都命中 startDownloadIfNeeded()
+    /// 重新建一个下载任务，实测会让一批已经"划走/离开可见区域"的卡片在背后无限重试下载，
+    /// 大量并发线程常驻，是列表快速滚动、进出详情页时 CPU 异常升高的根因之一。
+    /// 摘掉 item 之后这个播放器实例不再能通过 becomeActive() 恢复播放，只适合调用方紧接着就要
+    /// 丢弃这个 AIVVideoPlayer 实例的场景（目前 AIVCellPlaybackController/AIVSelfOwnedVideoPlayback
+    /// 的用法都是如此）；如果只是想临时挂起、之后还要在原位置继续播，应该用 stop()/play() 这一对。
     public func resignActive(stopPlayback: Bool = true) {
         guard !isCachingSuspended else { return }
         isCachingSuspended = true
@@ -237,6 +246,7 @@ public final class AIVVideoPlayer: NSObject, ObservableObject {
         if stopPlayback {
             wasPlayingBeforeResign = (status == .playing)
             player.pause()
+            player.replaceCurrentItem(with: nil)
         }
     }
 
