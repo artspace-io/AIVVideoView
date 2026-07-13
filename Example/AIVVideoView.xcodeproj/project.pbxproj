@@ -24,6 +24,7 @@
 		70D11657536122438D459560 /* StubURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FF1A2EA92084130EBE423A /* StubURLProtocol.swift */; };
 		781AFEF02373BE9DC838A976 /* AIVVideoPlayerCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C7EA5C34B2ED1F5AE336EE /* AIVVideoPlayerCoordinatorTests.swift */; };
 		7D063D0D7C7AF788FC4B4BE9 /* CategoryCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BEB549947D394C1E1AC653 /* CategoryCardCell.swift */; };
+		80612FEA9C16B2CD872D03E1 /* AIVVideoDownloadLimiterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E80B1333C15F5CEF85737B /* AIVVideoDownloadLimiterTests.swift */; };
 		80A9D17700A4907D0897FAF2 /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 034DA6FD2ACE3E76153B9601 /* SectionHeaderView.swift */; };
 		894862C1EDF90A37E0D1CF91 /* AIVVideoPlayerViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B4CCA84186C9F89A9F72BD /* AIVVideoPlayerViewTests.swift */; };
 		91E3B3F0DD1E73F7E06D2E11 /* HeroCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3684D5B5DE66972A1E951948 /* HeroCell.swift */; };
@@ -61,6 +62,7 @@
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		607FACD71AFB9204008FA782 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		607FACDC1AFB9204008FA782 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		63E80B1333C15F5CEF85737B /* AIVVideoDownloadLimiterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AIVVideoDownloadLimiterTests.swift; sourceTree = "<group>"; };
 		6C0D367478C30C505E925ECB /* AIVVideoView_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AIVVideoView_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E8D0BF77C9CB8BC2D2BF504 /* Pods-AIVVideoView_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AIVVideoView_Tests.release.xcconfig"; path = "Target Support Files/Pods-AIVVideoView_Tests/Pods-AIVVideoView_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		71E1705383B44BCDE54A6F1B /* Pods_AIVVideoView_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AIVVideoView_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -166,6 +168,7 @@
 				0047EBC10AC0BFAB738C43F6 /* AIVVideoResourceLoaderTests.swift */,
 				0069EB363682A9531E17DFDC /* AIVCellPlaybackControllerTests.swift */,
 				95B4CCA84186C9F89A9F72BD /* AIVVideoPlayerViewTests.swift */,
+				63E80B1333C15F5CEF85737B /* AIVVideoDownloadLimiterTests.swift */,
 			);
 			name = Tests;
 			path = Tests;
@@ -437,6 +440,7 @@
 				6638110B96CD4023261D2BB8 /* AIVVideoResourceLoaderTests.swift in Sources */,
 				209C90FCB60B7790919144E8 /* AIVCellPlaybackControllerTests.swift in Sources */,
 				894862C1EDF90A37E0D1CF91 /* AIVVideoPlayerViewTests.swift in Sources */,
+				80612FEA9C16B2CD872D03E1 /* AIVVideoDownloadLimiterTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
