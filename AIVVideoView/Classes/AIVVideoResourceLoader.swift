@@ -98,6 +98,7 @@ public final class AIVVideoResourceLoader: NSObject {
             self?.respondToAllLoadingRequests()
         }
         task.onComplete = { [weak self] _, error in
+            Task { await AIVVideoDownloadLimiter.shared.release() }
             guard let self else { return }
             if let error, (error as NSError).domain != NSURLErrorDomain || (error as NSError).code != NSURLErrorCancelled {
                 for req in self.safeGetRequests() {
@@ -108,7 +109,18 @@ public final class AIVVideoResourceLoader: NSObject {
             }
         }
 
-        task.start()
+        // 真正发起网络请求前先排队拿一个下载许可：列表快速滚动时同时出现的 cell 不会
+        // 一拥而上各自开始下载，而是最多 AIVVideoDownloadLimiter 允许的并发数同时进行。
+        // task 已经在上面同步赋值给 downloadTask 用于去重，这里只是延后 start() 的时机，
+        // 不影响 cancel() 能随时命中同一个 task 实例。
+        Task {
+            await AIVVideoDownloadLimiter.shared.acquire()
+            guard !task.isCancelled else {
+                await AIVVideoDownloadLimiter.shared.release()
+                return
+            }
+            task.start()
+        }
     }
 
     private func respondToAllLoadingRequests() {
@@ -189,16 +201,26 @@ public extension AIVVideoResourceLoader {
             return URL(fileURLWithPath: cache.filePath(for: url))
         }
 
-        return try await withCheckedThrowingContinuation { continuation in
-            let task = AIVVideoDownloadTask(url: url)
-            task.onComplete = { _, error in
-                if let error {
-                    continuation.resume(throwing: error)
-                } else {
-                    continuation.resume(returning: URL(fileURLWithPath: cache.filePath(for: url)))
+        // 预加载也走同一个下载许可，避免例如"结果轮询"和"历史列表"同时触发多个
+        // preload(url:) 时叠加到列表播放本身的下载并发数之上。
+        await AIVVideoDownloadLimiter.shared.acquire()
+        do {
+            let result = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<URL, Error>) in
+                let task = AIVVideoDownloadTask(url: url)
+                task.onComplete = { _, error in
+                    if let error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume(returning: URL(fileURLWithPath: cache.filePath(for: url)))
+                    }
                 }
+                task.start()
             }
-            task.start()
+            await AIVVideoDownloadLimiter.shared.release()
+            return result
+        } catch {
+            await AIVVideoDownloadLimiter.shared.release()
+            throw error
         }
     }
 }

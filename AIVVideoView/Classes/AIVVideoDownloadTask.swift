@@ -9,7 +9,6 @@ final class AIVVideoDownloadTask: NSObject {
 
     private var startOffset: Int64
     private let cache = AIVVideoCache.shared
-    private var session: URLSession?
     private var dataTask: URLSessionDataTask?
 
     var onReceiveData: (() -> Void)?
@@ -20,10 +19,14 @@ final class AIVVideoDownloadTask: NSObject {
     /// URLProtocol.registerClass 全局注册在 .default 配置下并不总是能可靠拦截请求
     /// （系统可能会走出进程的网络守护进程），单测需要换成 .ephemeral + 显式 protocolClasses
     /// 才能稳定拦截，所以留了这个内部可替换的口子，不影响线上行为。
+    /// 所有下载任务共用 AIVVideoDownloadSession.shared 这一个 URLSession，configuration
+    /// 只在 session 创建时读取一次，所以这里换了 provider 之后要顺带重建底层 session。
     static var sessionConfigurationProvider: () -> URLSessionConfiguration = {
         let config = URLSessionConfiguration.default
         config.requestCachePolicy = .reloadIgnoringLocalCacheData
         return config
+    } {
+        didSet { AIVVideoDownloadSession.shared.reload() }
     }
 
     init(url: URL, startOffset: Int64 = 0) {
@@ -31,13 +34,11 @@ final class AIVVideoDownloadTask: NSObject {
         self.startOffset = startOffset
         self.downloadedLength = startOffset
         super.init()
-        let config = Self.sessionConfigurationProvider()
-        session = URLSession(configuration: config, delegate: self, delegateQueue: nil)
         var request = URLRequest(url: url)
         if startOffset > 0 {
             request.addValue("bytes=\(startOffset)-", forHTTPHeaderField: "Range")
         }
-        dataTask = session?.dataTask(with: request)
+        dataTask = AIVVideoDownloadSession.shared.makeDataTask(for: request, owner: self)
     }
 
     func start() {
@@ -47,12 +48,13 @@ final class AIVVideoDownloadTask: NSObject {
     func cancel() {
         isCancelled = true
         dataTask?.cancel()
-        session?.invalidateAndCancel()
     }
 }
 
-extension AIVVideoDownloadTask: URLSessionDataDelegate {
-    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
+/// 由 AIVVideoDownloadSession（所有任务共用的 URLSessionDataDelegate）按 dataTask
+/// 转发过来，语义和之前各任务自己当 delegate 时完全一致。
+extension AIVVideoDownloadTask {
+    func handleReceive(response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
         guard let httpResponse = response as? HTTPURLResponse else {
             completionHandler(.cancel)
             return
@@ -77,13 +79,13 @@ extension AIVVideoDownloadTask: URLSessionDataDelegate {
         completionHandler(.allow)
     }
 
-    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+    func handleReceive(data: Data) {
         cache.write(data, at: downloadedLength, for: url)
         downloadedLength += Int64(data.count)
         onReceiveData?()
     }
 
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+    func handleComplete(error: Error?) {
         onComplete?(self, error)
     }
 }
