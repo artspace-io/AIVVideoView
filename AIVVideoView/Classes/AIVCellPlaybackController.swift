@@ -1,4 +1,5 @@
 import Foundation
+import QuartzCore
 
 /// 封装单个 cell 的播放器生命周期：向 AIVVideoPlayerCoordinator 申请/释放播放名额、
 /// 创建/持有 AIVVideoPlayer、监听首帧就绪。宿主 cell 只需要提供视频 URL 和封面淡入淡出的回调，
@@ -81,6 +82,8 @@ public final class AIVCellPlaybackController {
         guard let player else { return }
         player.resignActive(stopPlayback: true)
         playerView.player = nil
+        // 清掉这一轮残留的隐式动画，否则 playerView 被复用到下一个视频时，首帧会从旧尺寸插值过来
+        playerView.stopLayerAnimations()
         self.player = nil
         AIVVideoPlayerCoordinator.shared.releaseSlot(for: self)
     }
@@ -101,7 +104,11 @@ public final class AIVCellPlaybackController {
         readyForDisplayObservation = playerView.playerLayer.observe(\.isReadyForDisplay, options: [.new]) { [weak self] layer, _ in
             guard layer.isReadyForDisplay else { return }
             DispatchQueue.main.async {
-                self?.onFirstFrameReady?()
+                guard let self else { return }
+                // 宿主通常在 onFirstFrameReady 里揭开封面，所以必须赶在通知之前把 AVPlayerLayer
+                // 内部内容层首帧那一下的隐式缩放动画掐掉，否则它正好暴露在封面消失的瞬间
+                self.playerView.stopLayerAnimations()
+                self.onFirstFrameReady?()
             }
         }
 
