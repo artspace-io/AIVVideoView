@@ -9,7 +9,10 @@ public final class AIVVideoPlayerView: UIView {
             if let player {
                 playerLayer.player = player.player
                 playerLayer.videoGravity = player.videoGravity
+                CATransaction.begin()
+                CATransaction.setDisableActions(true)
                 playerLayer.isHidden = false
+                CATransaction.commit()
                 gravitySubscription = player.$videoGravity
                     .receive(on: DispatchQueue.main)
                     .sink { [weak self] gravity in
@@ -17,7 +20,10 @@ public final class AIVVideoPlayerView: UIView {
                     }
             } else {
                 playerLayer.player = nil
+                CATransaction.begin()
+                CATransaction.setDisableActions(true)
                 playerLayer.isHidden = true
+                CATransaction.commit()
             }
         }
     }
