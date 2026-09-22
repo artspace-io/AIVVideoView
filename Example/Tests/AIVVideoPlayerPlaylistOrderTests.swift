@@ -104,4 +104,30 @@ final class AIVVideoPlayerPlaylistOrderTests: XCTestCase {
 
         XCTAssertEqual(player.currentPlaylistIndex, 2, "切换 playMode 不应该改变当前正在播放的下标")
     }
+
+    /// 把同一个 url 重复 N 次塞进 playlist，是调用方表达"循环播 N 遍"的常见写法。
+    /// 这种列表在切下标时不该重建播放项——重建会走一遍 tearDown + 重新加载，
+    /// 在两遍的衔接处表现为黑帧和卡顿。status 是同步更新的：重建会置成 .preparing，
+    /// 只 seek 回 0 则是 .seeking，据此区分走的是哪条路径。
+    func testRepeatedURLPlaylistSeeksInsteadOfRebuilding() {
+        let url = URL(string: "https://video.invalid/loop.mp4")!
+        let player = AIVVideoPlayer()
+        player.preparePlaylist(Array(repeating: url, count: 3), mode: .circle)
+        XCTAssertEqual(player.status, .preparing, "首次准备必然要加载一次")
+
+        player.playNext()
+
+        XCTAssertEqual(player.currentPlaylistIndex, 1, "下标仍然要正常推进")
+        XCTAssertEqual(player.status, .seeking, "同一个 url 应该直接 seek 回 0 重播，而不是重建播放项")
+    }
+
+    func testDifferentURLPlaylistStillRebuildsItem() {
+        let player = AIVVideoPlayer()
+        player.preparePlaylist(urls(3), mode: .circle)
+
+        player.playNext()
+
+        XCTAssertEqual(player.currentPlaylistIndex, 1)
+        XCTAssertEqual(player.status, .preparing, "换了 url 就必须重新加载资源")
+    }
 }

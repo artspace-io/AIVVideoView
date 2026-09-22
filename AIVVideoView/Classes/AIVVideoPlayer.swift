@@ -44,6 +44,17 @@ public final class AIVVideoPlayer: NSObject, ObservableObject {
     /// App 进入后台时自动 stop()，回到前台时自动 playFromCurrentTime()，默认开启
     public var autoPlayWhenAppBeActive: Bool = true
 
+    /// currentTime 的采样间隔，默认 1/10 秒。
+    ///
+    /// 进度条需要更顺滑时调小（例如 1/60 秒可以跟上 60fps 的动画），代价是回调更频繁；
+    /// 只做粗粒度的进度展示则可以调大以减少主线程唤醒。设置后立即对当前播放项生效。
+    public var timeObserverInterval: CMTime = CMTimeMake(value: 1, timescale: 10) {
+        didSet {
+            guard timeObserverToken != nil else { return }
+            setupTimeObserver()
+        }
+    }
+
     public let player: AVPlayer
 
     public var automaticallyWaitsToMinimizeStalling: Bool {
@@ -174,6 +185,11 @@ public final class AIVVideoPlayer: NSObject, ObservableObject {
     public func stop() {
         player.pause()
         resourceLoader?.cancel()
+    }
+
+    /// 从头播放当前项：seek 回 0 并继续播，不重新加载资源，也不改变在播放列表中的位置。
+    public func playFromBeginning() {
+        seekAndPlay(from: .zero)
     }
 
     /// 从当前进度继续播放（不做“播完了就从头重播”的判断，语义上就是恢复当前进度）
@@ -329,8 +345,13 @@ public final class AIVVideoPlayer: NSObject, ObservableObject {
     }
 
     private func setupTimeObserver() {
+        // 间隔被改动时会重新走一遍这里，旧的观察者必须先摘掉，否则会叠加多个周期回调。
+        if let token = timeObserverToken {
+            player.removeTimeObserver(token)
+            timeObserverToken = nil
+        }
         timeObserverToken = player.addPeriodicTimeObserver(
-            forInterval: CMTimeMake(value: 1, timescale: 10),
+            forInterval: timeObserverInterval,
             queue: .main
         ) { [weak self] time in
             MainActor.assumeIsolated {
@@ -459,6 +480,14 @@ public final class AIVVideoPlayer: NSObject, ObservableObject {
     private func playAt(index: Int) {
         guard playlist.indices.contains(index) else { return }
         if index == currentIndex {
+            seekAndPlay(from: .zero)
+            return
+        }
+        // 列表里不同下标指向同一个 url（常见于把同一个视频重复 N 次来表达"循环 N 遍"）时，
+        // 没必要拆掉重建：资源和 AVPlayerItem 都还是同一个，重建要走一遍完整的 tearDown +
+        // 重新加载，在两遍的衔接处表现为黑帧和卡顿。直接 seek 回 0 重播即可。
+        if playlist[index] == currentURL, playerItem != nil {
+            currentIndex = index
             seekAndPlay(from: .zero)
             return
         }
